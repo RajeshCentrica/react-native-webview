@@ -15,7 +15,7 @@
 #import <React/RCTUIKit.h>
 #endif // !TARGET_OS_OSX
 
-#import <TrustKit/@.h>
+#import <TrustKit/TrustKit.h>
 #import <TrustKit/TSKPinningValidator.h>
 #import <TrustKit/TSKPinningValidatorCallback.h>
 
