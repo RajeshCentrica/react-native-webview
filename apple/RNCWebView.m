@@ -15,6 +15,11 @@
 #import <React/RCTUIKit.h>
 #endif // !TARGET_OS_OSX
 
+#import <TrustKit/@.h>
+#import <TrustKit/TSKPinningValidator.h>
+#import <TrustKit/TSKPinningValidatorCallback.h>
+
+
 #import "objc/runtime.h"
 
 static NSTimer *keyboardTimer;
@@ -761,7 +766,7 @@ static NSDictionary* customCertificatesForHost;
   didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
                   completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential * _Nullable))completionHandler
 {
-    NSString* host = nil;
+    /*NSString* host = nil;
     if (webView.URL != nil) {
         host = webView.URL.host;
     }
@@ -790,7 +795,16 @@ static NSDictionary* customCertificatesForHost;
             }
         }
     }
-    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);*/
+    /// TrustKit  SSL Pin validation
+    @try {
+      TSKPinningValidator *pinningValidator = [[TrustKit sharedInstance] pinningValidator];
+      if (![pinningValidator handleChallenge:challenge completionHandler:completionHandler]) {
+        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+      }
+    }@catch (NSException *e) {
+      completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+    }
 }
 
 #pragma mark - WKNavigationDelegate methods
